@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: false
   tasks:
-  # Block is a Group of Tasks combined together
+
   - name: Get Info Block
     block: 
       - name: Get Running instance Info
@@ -13,9 +13,6 @@
       - name: Print info
         debug: var="ec2info.instances"
              
-    # By specifying always on the tag, 
-    # I let this block to run all the time by module_default
-    # this is for security to net create ec2 instances accidentally
     tags: ['always', 'getinfoonly']
      
      - name: Create EC2 block
@@ -53,6 +50,4 @@
           delay: 10
           timeout: 120
         loop: "{{ ec2.instances }}"
-    # By specifying never on the tag of this block, 
-    # I let this block to run only when explicitely being called
     tags: ['never', 'ec2-create']
