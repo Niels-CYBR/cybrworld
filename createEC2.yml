@@ -22,7 +22,7 @@
           tags: create_ec2
         ec2:
           region: eu-central-1
-          key_name: nvb-cybrworld 
+          key_name: nvb-personal 
           group: sg-0a1fdf6b39882f830
           instance_type: t2.micro
           image: ami-07df274a488ca9195
