@@ -1,8 +1,5 @@
 --- 
 - 
-  auth: 
-    aws_access_key: AWS_ACCESS_KEY_ID
-    aws_secret_key: AWS_SECRET_ACCESS_ID
   gather_facts: false
   hosts: localhost
   name: "Create Ec2 instances"
