@@ -1,0 +1,56 @@
+---
+- name: create ephameral EC2 instance 
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    
+    - name: Get Info Block
+      block: 
+        - name: Get running instance info
+        
+          ec2_instance_info:
+          register: ec2info
+          
+        - name: Print info
+          debug: var="ec2info.instances"
+          
+       tags: ['always', 'getinfoonly']
+     
+     - name: Create EC2 block
+       block: 
+       
+        - name: Launch EC2 instance
+          tags: create_ec2
+        ec2:
+          region: eu-central-1
+          key_name: nvb-cybrworld 
+          group: sg-0a1fdf6b39882f830
+          instance_type: t2.micro
+          image: ami-07df274a488ca9195
+          wait: yes
+          wait_timeout: 500
+          count: 2
+          instance_tags:
+            name: testserver
+            os: awsLinux
+          monitoring: no
+          vpc_subnet_id: subnet-7609861c
+          assign_public_ip: yes
+        register: ec2
+        delegate_to: localhost
+      - name : Add instance to host group
+        add_host:
+          hostname: "{{ item.public_ip }}"
+          groupname: launched
+        loop: "{{ ec2.instances }}"
+      - name: Wait for SSH to come up
+        local_action:
+          module: wait_for
+          host: "{{ item.public_ip }}"
+          port: 22
+          delay: 10
+          timeout: 120
+        loop: "{{ ec2.instances }}"
+    # By specifying never on the tag of this block, 
+    # I let this block to run only when explicitely being called
+    tags: ['never', 'ec2-create']
