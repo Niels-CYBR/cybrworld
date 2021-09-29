@@ -5,9 +5,11 @@
   tasks:
 
   - name: Get Info Block
-    block: 
+    block:
       - name: Get Running instance Info
-        
+        auth:
+          aws_access_key: "AWS_ACCESS_KEY_ID"
+          aws_secret_key: "AWS_SECRET_ACCESS_ID"
         ec2_instance_info:
         register: ec2info 
       - name: Print info
@@ -19,6 +21,9 @@
        block: 
        
         - name: Launch EC2 instance
+        auth:
+          aws_access_key: "AWS_ACCESS_KEY_ID"
+          aws_secret_key: "AWS_SECRET_ACCESS_ID"
           tags: create_ec2
         ec2:
           region: eu-central-1
